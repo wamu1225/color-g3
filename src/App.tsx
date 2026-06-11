@@ -10,6 +10,7 @@ import { EXAM_CONFIG } from './data/examConfig';
 import HueCircle from './components/HueCircle';
 import ToneMap from './components/ToneMap';
 import Swatch from './components/Swatch';
+import ConceptDiagram from './components/ConceptDiagram';
 import Quiz from './components/Quiz';
 import { tokenizeInline } from './lib/inline';
 import type { InlineToken } from './lib/inline';
@@ -143,6 +144,8 @@ function renderContent(content: string, navigate: (r: Route) => void): ReactNode
     if (trimmed === '[[tonemap]]') { out.push(<ToneMap key={key++} />); i++; continue; }
     const swMatch = trimmed.match(/^\[\[swatches:([a-z0-9-]+)\]\]$/);
     if (swMatch) { out.push(<Swatch key={key++} setKey={swMatch[1]} />); i++; continue; }
+    const dgMatch = trimmed.match(/^\[\[diagram:([a-z0-9-]+)\]\]$/);
+    if (dgMatch) { out.push(<ConceptDiagram key={key++} dkey={dgMatch[1]} />); i++; continue; }
 
     // 水平線
     if (/^---+$/.test(trimmed)) { out.push(<hr key={key++} />); i++; continue; }

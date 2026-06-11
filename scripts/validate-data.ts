@@ -6,6 +6,9 @@ import { chapterNames } from '../src/data/chapters';
 import { scanContentForRawTags } from '../src/lib/inline';
 import { swatchSets } from '../src/data/swatches';
 
+// 概念図のキー（src/components/ConceptDiagram.tsx の DIAGRAM_KEYS と一致させること）
+const DIAGRAM_KEYS = ['mixing-additive', 'mixing-subtractive', 'contrast-value', 'assimilation', 'gradation-hue'];
+
 const errors: string[] = [];
 const warnings: string[] = [];
 
@@ -56,6 +59,11 @@ for (const m of modules) {
     if (tag.startsWith('swatches:')) {
       const k = tag.slice('swatches:'.length);
       if (!swatchSets[k]) errors.push(`[${m.id}] 未定義の色見本キー: [[swatches:${k}]]`);
+      continue;
+    }
+    if (tag.startsWith('diagram:')) {
+      const k = tag.slice('diagram:'.length);
+      if (!DIAGRAM_KEYS.includes(k)) errors.push(`[${m.id}] 未定義の概念図キー: [[diagram:${k}]]`);
       continue;
     }
     if (tag.startsWith('term:')) {

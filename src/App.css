@@ -119,6 +119,10 @@
 .swatch-group-label { font-size: 0.8rem; font-weight: 700; color: var(--ink-soft); margin-bottom: 0.4rem; text-align: left; }
 .swatch-group .swatch-row { justify-content: flex-start; }
 
+/* ── 概念図 ── */
+.diagram-viz { max-width: 360px; }
+.diagram-viz svg { border-radius: 8px; }
+
 /* ── テーブル ── */
 .table-wrap { overflow-x: auto; margin: 1.3rem 0; border: 1px solid var(--line); border-radius: var(--radius); }
 table { border-collapse: collapse; width: 100%; font-size: 0.94rem; }
