@@ -3,6 +3,7 @@
 import { modules } from '../src/data/modules';
 import { glossary } from '../src/data/glossary';
 import { chapterNames } from '../src/data/chapters';
+import { scanContentForRawTags } from '../src/lib/inline';
 
 const errors: string[] = [];
 const warnings: string[] = [];
@@ -57,6 +58,18 @@ for (const m of modules) {
       continue;
     }
     errors.push(`[${m.id}] 未知のカスタムタグ: [[${tag}]]`);
+  }
+}
+
+// 5b. 生タグ残り検出（App.tsx と同じトークナイザで、画面に [[...]] や ** が露出しないか確認）
+//     太字に入れ子の用語タグ等を取りこぼすと本番で生タグが出るため、ここで未然に止める。
+for (const m of modules) {
+  const arts = scanContentForRawTags(m.content);
+  for (const a of arts) errors.push(`[${m.id}] 描画で露出する恐れ: ${a}`);
+  if (m.keyPoints) {
+    for (const kp of m.keyPoints) {
+      for (const a of scanContentForRawTags(kp)) errors.push(`[${m.id}] keyPoints露出: ${a}`);
+    }
   }
 }
 

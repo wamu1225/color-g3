@@ -10,6 +10,8 @@ import { EXAM_CONFIG } from './data/examConfig';
 import HueCircle from './components/HueCircle';
 import ToneMap from './components/ToneMap';
 import Quiz from './components/Quiz';
+import { tokenizeInline } from './lib/inline';
+import type { InlineToken } from './lib/inline';
 
 const BASE = '/color-g3';
 const PROGRESS_KEY = 'color-g3-progress';
@@ -86,45 +88,41 @@ const CALLOUTS: Record<string, { label: string; cls: string }> = {
   '📖': { label: '発展', cls: 'callout-read' },
 };
 
-function parseInline(text: string, navigate: (r: Route) => void, keyBase: string): ReactNode[] {
-  // トークン分割：[[term:..]] / [text](url) / **bold** / `code`
-  const nodes: ReactNode[] = [];
-  const re = /\[\[term:([^\]]+)\]\]|\[([^\]]+)\]\(([^)]+)\)|\*\*([^*]+)\*\*|`([^`]+)`/g;
-  let last = 0;
-  let m: RegExpExecArray | null;
-  let i = 0;
-  while ((m = re.exec(text)) !== null) {
-    if (m.index > last) nodes.push(text.slice(last, m.index));
-    const key = `${keyBase}-i${i++}`;
-    if (m[1] !== undefined) {
-      const name = m[1];
-      const id = termIndex[name];
-      if (id) {
-        nodes.push(
-          <a key={key} className="term-link" href={`${BASE}/glossary/#term-${id}`}
-            onClick={(e) => { e.preventDefault(); navigate({ view: 'glossary' }); setTimeout(() => { document.getElementById(`term-${id}`)?.scrollIntoView({ behavior: 'smooth' }); }, 60); }}>
-            {name}
-          </a>
-        );
-      } else {
-        nodes.push(<span key={key} className="term-plain">{name}</span>);
+// 共有トークナイザ（src/lib/inline.ts）が返すトークン列を React ノードへ描画する。
+// トークン化ロジックを検証スクリプトと共有することで、生タグの取りこぼしを防ぐ。
+function renderTokens(tokens: InlineToken[], navigate: (r: Route) => void, keyBase: string): ReactNode[] {
+  return tokens.map((tk, i) => {
+    const key = `${keyBase}-${i}`;
+    switch (tk.t) {
+      case 'text':
+        return <Fragment key={key}>{tk.v}</Fragment>;
+      case 'term': {
+        const id = termIndex[tk.name];
+        if (id) {
+          return (
+            <a key={key} className="term-link" href={`${BASE}/glossary/#term-${id}`}
+              onClick={(e) => { e.preventDefault(); navigate({ view: 'glossary' }); setTimeout(() => { document.getElementById(`term-${id}`)?.scrollIntoView({ behavior: 'smooth' }); }, 60); }}>
+              {tk.name}
+            </a>
+          );
+        }
+        return <span key={key} className="term-plain">{tk.name}</span>;
       }
-    } else if (m[2] !== undefined && m[3] !== undefined) {
-      const label = m[2]; const url = m[3];
-      if (/^https?:\/\//.test(url)) {
-        nodes.push(<a key={key} href={url} target="_blank" rel="noopener noreferrer">{label}</a>);
-      } else {
-        nodes.push(<a key={key} href={url} onClick={(e) => { e.preventDefault(); navigate(parseRoute(url)); }}>{label}</a>);
-      }
-    } else if (m[4] !== undefined) {
-      nodes.push(<strong key={key}>{m[4]}</strong>);
-    } else if (m[5] !== undefined) {
-      nodes.push(<code key={key}>{m[5]}</code>);
+      case 'link':
+        if (/^https?:\/\//.test(tk.url)) {
+          return <a key={key} href={tk.url} target="_blank" rel="noopener noreferrer">{tk.label}</a>;
+        }
+        return <a key={key} href={tk.url} onClick={(e) => { e.preventDefault(); navigate(parseRoute(tk.url)); }}>{tk.label}</a>;
+      case 'bold':
+        return <strong key={key}>{renderTokens(tk.children, navigate, key)}</strong>;
+      case 'code':
+        return <code key={key}>{tk.v}</code>;
     }
-    last = m.index + m[0].length;
-  }
-  if (last < text.length) nodes.push(text.slice(last));
-  return nodes;
+  });
+}
+
+function parseInline(text: string, navigate: (r: Route) => void, keyBase: string): ReactNode[] {
+  return renderTokens(tokenizeInline(text), navigate, keyBase);
 }
 
 function renderContent(content: string, navigate: (r: Route) => void): ReactNode[] {
