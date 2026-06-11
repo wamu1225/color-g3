@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="13" fill="#faf8f5"/>
+  <g transform="translate(32 32)">
+    <!-- 色相ディスクの模式（6セグメント）— サイトの色テーマを識別する内製アイコン -->
+    <path d="M0 0 L0 -21 A21 21 0 0 1 18.2 -10.5 Z" fill="#c0392b"/>
+    <path d="M0 0 L18.2 -10.5 A21 21 0 0 1 18.2 10.5 Z" fill="#e08e0b"/>
+    <path d="M0 0 L18.2 10.5 A21 21 0 0 1 0 21 Z" fill="#3a8a4f"/>
+    <path d="M0 0 L0 21 A21 21 0 0 1 -18.2 10.5 Z" fill="#2b79b8"/>
+    <path d="M0 0 L-18.2 10.5 A21 21 0 0 1 -18.2 -10.5 Z" fill="#5b4b9e"/>
+    <path d="M0 0 L-18.2 -10.5 A21 21 0 0 1 0 -21 Z" fill="#8c2f6e"/>
+    <circle r="8.5" fill="#faf8f5"/>
+  </g>
+</svg>
