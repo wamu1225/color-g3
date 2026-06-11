@@ -58,5 +58,6 @@ export function findRawArtifacts(tokens: InlineToken[]): string[] {
 export function scanContentForRawTags(content: string): string[] {
   let s = content;
   for (const tag of BLOCK_TAGS) s = s.split(`[[${tag}]]`).join('');
+  s = s.replace(/\[\[swatches:[a-z0-9-]+\]\]/g, ''); // [[swatches:KEY]] もブロックタグ
   return findRawArtifacts(tokenizeInline(s));
 }

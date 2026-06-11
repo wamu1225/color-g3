@@ -4,6 +4,7 @@ import { modules } from '../src/data/modules';
 import { glossary } from '../src/data/glossary';
 import { chapterNames } from '../src/data/chapters';
 import { scanContentForRawTags } from '../src/lib/inline';
+import { swatchSets } from '../src/data/swatches';
 
 const errors: string[] = [];
 const warnings: string[] = [];
@@ -52,6 +53,11 @@ for (const m of modules) {
   while ((mt = tagRe.exec(m.content)) !== null) {
     const tag = mt[1];
     if (tag === 'huecircle' || tag === 'tonemap') continue;
+    if (tag.startsWith('swatches:')) {
+      const k = tag.slice('swatches:'.length);
+      if (!swatchSets[k]) errors.push(`[${m.id}] 未定義の色見本キー: [[swatches:${k}]]`);
+      continue;
+    }
     if (tag.startsWith('term:')) {
       const name = tag.slice('term:'.length);
       if (!termLead[name]) warnings.push(`[${m.id}] 用語集に無い用語リンク: [[term:${name}]]`);

@@ -9,6 +9,7 @@ import { chapterNames } from './data/chapters';
 import { EXAM_CONFIG } from './data/examConfig';
 import HueCircle from './components/HueCircle';
 import ToneMap from './components/ToneMap';
+import Swatch from './components/Swatch';
 import Quiz from './components/Quiz';
 import { tokenizeInline } from './lib/inline';
 import type { InlineToken } from './lib/inline';
@@ -140,6 +141,8 @@ function renderContent(content: string, navigate: (r: Route) => void): ReactNode
     // 特殊タグ（単独行）
     if (trimmed === '[[huecircle]]') { out.push(<HueCircle key={key++} />); i++; continue; }
     if (trimmed === '[[tonemap]]') { out.push(<ToneMap key={key++} />); i++; continue; }
+    const swMatch = trimmed.match(/^\[\[swatches:([a-z0-9-]+)\]\]$/);
+    if (swMatch) { out.push(<Swatch key={key++} setKey={swMatch[1]} />); i++; continue; }
 
     // 水平線
     if (/^---+$/.test(trimmed)) { out.push(<hr key={key++} />); i++; continue; }

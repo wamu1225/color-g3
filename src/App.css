@@ -108,6 +108,17 @@
 .callout-read { border-left-color: var(--read); background: var(--read-bg); }
 .callout-read .callout-label { color: var(--read); }
 
+/* ── 色見本（Swatch） ── */
+.swatch-viz { max-width: 560px; }
+.swatch-row { display: flex; flex-wrap: wrap; gap: 0.7rem; justify-content: center; }
+.swatch-chip { display: flex; flex-direction: column; align-items: center; width: 84px; }
+.swatch-color { width: 100%; height: 46px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04); }
+.swatch-name { font-size: 0.82rem; font-weight: 600; margin-top: 0.35rem; text-align: center; line-height: 1.3; }
+.swatch-note { font-size: 0.72rem; color: var(--ink-faint); text-align: center; line-height: 1.3; }
+.swatch-groups { display: flex; flex-direction: column; gap: 0.9rem; }
+.swatch-group-label { font-size: 0.8rem; font-weight: 700; color: var(--ink-soft); margin-bottom: 0.4rem; text-align: left; }
+.swatch-group .swatch-row { justify-content: flex-start; }
+
 /* ── テーブル ── */
 .table-wrap { overflow-x: auto; margin: 1.3rem 0; border: 1px solid var(--line); border-radius: var(--radius); }
 table { border-collapse: collapse; width: 100%; font-size: 0.94rem; }
