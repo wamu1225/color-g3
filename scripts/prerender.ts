@@ -16,21 +16,64 @@ const SITE_NAME = '色彩検定3級 学習ノート';
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-function stripMarkdown(text: string): string {
-  return text
-    .replace(/\[\[term:([^\]]+)\]\]/g, '$1')   // 用語リンク → 語のみ
-    .replace(/\[\[[^\]]*\]\]/g, '')             // [[huecircle]] / [[tonemap]]
-    .replace(/^#{1,6}\s+/gm, '')                // 見出し
-    .replace(/\*\*(.*?)\*\*/g, '$1')            // 太字
-    .replace(/^[-*]\s+/gm, '・')                // 箇条書き
-    .replace(/^\d+\.\s+/gm, '')                 // 番号リスト
-    .replace(/^\|.*\|$/gm, '')                  // 表
-    .replace(/^[-|:\s]+$/gm, '')                // 表区切り
-    .replace(/^---+$/gm, '')                    // 水平線
-    .replace(/`([^`]+)`/g, '$1')                // コード
-    .replace(/[💡🎯⚠️📖]/g, '')                 // コールアウト絵文字マーカー
-    .replace(/\n{3,}/g, '\n\n')
-    .trim();
+const inlineHtml = (s: string) => esc(
+  s.replace(/\[\[term:([^\]]+)\]\]/g, '$1').replace(/\[\[[^\]]*\]\]/g, '').replace(/`([^`]+)`/g, '$1')
+).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+const CALLOUTS: Record<string, { label: string; cls: string }> = {
+  '💡': { label: 'ヒント', cls: 'callout-tip' },
+  '🎯': { label: '試験ポイント', cls: 'callout-exam' },
+  '⚠️': { label: '注意', cls: 'callout-warn' },
+  '📖': { label: '発展', cls: 'callout-read' },
+};
+
+// 表・見出し・リスト・コールアウトを静的HTMLへ変換（旧stripMarkdownは表を丸ごと削除していたため新設。
+// コールアウトはApp.css の .callout/.callout-label と同じクラスを使い、ハイドレーション後と見た目を揃える）
+function mdToHtml(content: string): string {
+  const lines = content.split('\n');
+  const out: string[] = [];
+  let i = 0;
+  while (i < lines.length) {
+    const t = lines[i].trim();
+    if (t === '' || /^\[\[.*?\]\]$/.test(t)) { i++; continue; }
+    if (/^---+$/.test(t)) { out.push('<hr>'); i++; continue; }
+    if (t.startsWith('#### ')) { out.push(`<h4>${inlineHtml(t.slice(5))}</h4>`); i++; continue; }
+    if (t.startsWith('### ')) { out.push(`<h3>${inlineHtml(t.slice(4))}</h3>`); i++; continue; }
+    if (t.startsWith('## ')) { out.push(`<h2>${inlineHtml(t.slice(3))}</h2>`); i++; continue; }
+    const ck = Object.keys(CALLOUTS).find((mk) => t.startsWith(mk));
+    if (ck) {
+      const { label, cls } = CALLOUTS[ck];
+      out.push(`<div class="callout ${cls}"><span class="callout-label">${label}</span><p>${inlineHtml(t.slice(ck.length).trim())}</p></div>`);
+      i++; continue;
+    }
+    if (t.startsWith('|')) {
+      const rows: string[] = [];
+      while (i < lines.length && lines[i].trim().startsWith('|')) { rows.push(lines[i].trim()); i++; }
+      const parsed = rows.map((r) => r.replace(/^\||\|$/g, '').split('|').map((c) => c.trim()))
+        .filter((cells) => !cells.every((c) => /^:?-+:?$/.test(c) || c === ''));
+      if (parsed.length) {
+        const [head, ...body] = parsed;
+        const th = head.map((c) => `<th>${inlineHtml(c)}</th>`).join('');
+        const trs = body.map((cells) => '<tr>' + cells.map((c) => `<td>${inlineHtml(c)}</td>`).join('') + '</tr>').join('');
+        out.push(`<div class="table-wrap"><table><thead><tr>${th}</tr></thead><tbody>${trs}</tbody></table></div>`);
+      }
+      continue;
+    }
+    if (/^\d+\.\s/.test(t)) {
+      const items: string[] = [];
+      while (i < lines.length && /^\d+\.\s/.test(lines[i].trim())) { items.push(lines[i].trim().replace(/^\d+\.\s/, '')); i++; }
+      out.push('<ol>' + items.map((it) => `<li>${inlineHtml(it)}</li>`).join('') + '</ol>');
+      continue;
+    }
+    if (/^[-*]\s/.test(t)) {
+      const items: string[] = [];
+      while (i < lines.length && /^[-*]\s/.test(lines[i].trim())) { items.push(lines[i].trim().replace(/^[-*]\s/, '')); i++; }
+      out.push('<ul>' + items.map((it) => `<li>${inlineHtml(it)}</li>`).join('') + '</ul>');
+      continue;
+    }
+    out.push(`<p>${inlineHtml(t)}</p>`); i++;
+  }
+  return out.join('\n');
 }
 
 const banner = `<div style="background:#f3e7e7;border-bottom:1px solid #e3cccc;padding:10px 16px;font-size:0.88rem;text-align:center;margin-bottom:16px;border-radius:6px;max-width:820px;margin-left:auto;margin-right:auto"><a href="https://study-apps.com/" style="color:#6f242d;text-decoration:none;font-weight:600">← study-apps.com 学習サイト集トップへ</a></div>`;
@@ -107,7 +150,7 @@ function writePage(subpath: string, title: string, description: string, bodyHtml
 // ── モジュールページ ───────────────────────────
 let count = 0;
 for (const mod of modules) {
-  const seoText = stripMarkdown(mod.content).slice(0, 2200);
+  const seoText = mdToHtml(mod.content);
   // クイズスニペット（最初の3問・静的HTMLにも本文として出す）
   const quizSnippet = mod.quiz.slice(0, 3).map((q, qi) => {
     const correctAnswer = q.options[q.correctAnswer];
@@ -125,7 +168,7 @@ for (const mod of modules) {
   <nav style="margin-bottom:14px;font-size:0.85rem"><a href="${BASE}/" style="color:#8c2f39;text-decoration:none">ホーム</a> / 第${mod.chapter}章 ${esc(chapterNames[mod.chapter])}</nav>
   <h1 style="font-size:1.55rem;font-weight:700;border-bottom:2px solid #8c2f39;padding-bottom:8px;margin-bottom:12px">${esc(mod.title)}</h1>
   <p style="color:#5b554d;margin-bottom:18px;font-size:1.02rem">${esc(mod.description)}</p>
-  <div style="white-space:pre-line;color:#2a2622">${esc(seoText)}</div>
+  <div style="color:#2a2622">${seoText}</div>
   ${mod.keyPoints ? `<h2 style="font-size:1.1rem;margin:24px 0 8px">このモジュールのまとめ</h2><ul style="color:#2a2622">${mod.keyPoints.map((k) => `<li>${esc(k)}</li>`).join('')}</ul>` : ''}
   ${quizSnippetHtml}
   <nav style="margin-top:28px;border-top:1px solid #e4ded4;padding-top:16px"><a href="${BASE}/" style="color:#8c2f39;text-decoration:none">← ホームへ戻る</a></nav>
