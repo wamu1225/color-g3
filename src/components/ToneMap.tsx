@@ -34,11 +34,23 @@ export default function ToneMap({ highlight }: Props) {
   const padB = 40;
   const plotW = w - padL - padR;
   const plotH = h - padT - padB;
-  const sw = 56; // swatch 幅
   const sh = 30; // swatch 高さ
+  const fs = 10.5; // ラベルの文字サイズ
 
   const X = (x: number) => padL + x * plotW;
   const Y = (y: number) => padT + (1 - y) * plotH;
+
+  // swatch 幅はラベルの文字数に合わせる。
+  // 固定幅(56px)だと「ライトグレイッシュ」「ダークグレイッシュ」(9文字)が枠からはみ出して
+  // 見切れ、逆に短いラベル同士（ストロング×ビビッド）は箱が過大で重なっていた。
+  const swOf = (name: string) => Math.max(44, name.length * fs + 12);
+
+  // 箱がプロット枠の外にはみ出さないよう中心を寄せる（見切れの防止）
+  const clampCx = (cx: number, sw: number) => {
+    const min = padL + 2 + sw / 2;
+    const max = padL + plotW - 2 - sw / 2;
+    return Math.min(Math.max(cx, min), max);
+  };
 
   return (
     <figure className="viz">
@@ -68,7 +80,8 @@ export default function ToneMap({ highlight }: Props) {
 
         {/* トーン swatch */}
         {TONES.map((t) => {
-          const cx = X(t.x);
+          const sw = swOf(t.name);
+          const cx = clampCx(X(t.x), sw);
           const cy = Y(t.y);
           const isHi = highlight === t.symbol;
           return (
@@ -88,7 +101,7 @@ export default function ToneMap({ highlight }: Props) {
                 y={cy}
                 textAnchor="middle"
                 dominantBaseline="central"
-                fontSize="10.5"
+                fontSize={fs}
                 fontWeight={isHi ? 700 : 500}
                 fill={t.dark ? '#ffffff' : '#2a2a2a'}
                 style={{ pointerEvents: 'none' }}
