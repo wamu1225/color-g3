@@ -52,6 +52,37 @@ export default function ToneMap({ highlight }: Props) {
     return Math.min(Math.max(cx, min), max);
   };
 
+  // 配置を確定させる。横位置は彩度・縦位置は明度という意味を持つので動かせないが、
+  // 箱同士が重なると読めなくなる（ストロング×ビビッドが実際に22px重なっていた）。
+  // x は動かさず、重なった組だけ縦にわずかに逃がす（明度の上下関係は保つ向きに寄せる）。
+  const laidOut = (() => {
+    const items = TONES.map((t) => {
+      const sw = swOf(t.name);
+      return { t, sw, cx: clampCx(X(t.x), sw), cy: Y(t.y) };
+    });
+    for (let pass = 0; pass < 8; pass++) {
+      let moved = false;
+      for (let i = 0; i < items.length; i++) {
+        for (let j = i + 1; j < items.length; j++) {
+          const a = items[i];
+          const b = items[j];
+          const dx = Math.abs(a.cx - b.cx);
+          const dy = Math.abs(a.cy - b.cy);
+          if (dx >= (a.sw + b.sw) / 2 || dy >= sh + 2) continue;
+          // 上にある方を上へ、下にある方を下へ（明度の上下関係を壊さない）
+          const push = (sh + 2 - dy) / 2 + 0.5;
+          const upper = a.cy <= b.cy ? a : b;
+          const lower = upper === a ? b : a;
+          upper.cy -= push;
+          lower.cy += push;
+          moved = true;
+        }
+      }
+      if (!moved) break;
+    }
+    return items;
+  })();
+
   return (
     <figure className="viz">
       <svg
@@ -79,10 +110,7 @@ export default function ToneMap({ highlight }: Props) {
         </text>
 
         {/* トーン swatch */}
-        {TONES.map((t) => {
-          const sw = swOf(t.name);
-          const cx = clampCx(X(t.x), sw);
-          const cy = Y(t.y);
+        {laidOut.map(({ t, sw, cx, cy }) => {
           const isHi = highlight === t.symbol;
           return (
             <g key={t.symbol}>
