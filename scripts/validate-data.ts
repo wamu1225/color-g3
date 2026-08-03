@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 // scripts/validate-data.ts — データ整合性チェック（tsx で実データを import）
 // 実行: npx tsx scripts/validate-data.ts（npm run validate）
 import { modules } from '../src/data/modules';
@@ -6,8 +7,13 @@ import { chapterNames } from '../src/data/chapters';
 import { scanContentForRawTags } from '../src/lib/inline';
 import { swatchSets } from '../src/data/swatches';
 
-// 概念図のキー（src/components/ConceptDiagram.tsx の DIAGRAM_KEYS と一致させること）
-const DIAGRAM_KEYS = ['mixing-additive', 'mixing-subtractive', 'contrast-value', 'assimilation', 'gradation-hue'];
+// 概念図のキーは ConceptDiagram.tsx から読む（2026-08-04 修正）。
+// 従来は同じ配列をここに手で写しており、図を足すと validate だけが古いまま落ちる二重管理だった。
+const DIAGRAM_KEYS: string[] = (() => {
+  const src = readFileSync(new URL('../src/components/ConceptDiagram.tsx', import.meta.url), 'utf8');
+  const m = src.match(/export const DIAGRAM_KEYS = \[([\s\S]*?)\] as const;/);
+  return m ? [...m[1].matchAll(/'([a-z0-9-]+)'/g)].map((x) => x[1]) : [];
+})();
 
 const errors: string[] = [];
 const warnings: string[] = [];

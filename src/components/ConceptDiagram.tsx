@@ -6,6 +6,10 @@ export const DIAGRAM_KEYS = [
   'mixing-additive',
   'mixing-subtractive',
   'contrast-value',
+  'contrast-hue',
+  'contrast-chroma',
+  'contrast-complementary',
+  'contrast-edge',
   'assimilation',
   'gradation-hue',
 ] as const;
@@ -59,6 +63,67 @@ function MixingSubtractive() {
 }
 
 // 明度対比：同じ灰色が、明るい地では暗く・暗い地では明るく見える
+// 色相対比：同じオレンジが、黄の地では赤寄り・赤の地では黄寄りに見える
+function ContrastHue() {
+  return (
+    <Figure label="色相対比。中央の四角はどちらも同じオレンジだが、黄の地では赤寄りに、赤の地では黄寄りに見える。">
+      <svg viewBox="0 0 240 140" width="100%" role="img" aria-label="色相対比の模式図">
+        <rect x="0" y="0" width="120" height="140" fill="#f2d600" />
+        <rect x="120" y="0" width="120" height="140" fill="#e02020" />
+        <rect x="36" y="40" width="48" height="60" fill="#f08a2c" />
+        <rect x="156" y="40" width="48" height="60" fill="#f08a2c" />
+        <text x="60" y="124" textAnchor="middle" fill="#5a4a00" fontSize="11">黄の地</text>
+        <text x="180" y="124" textAnchor="middle" fill="#fff" fontSize="11">赤の地</text>
+      </svg>
+    </Figure>
+  );
+}
+
+// 彩度対比：同じくすんだ赤が、あざやかな地ではより濁って・くすんだ地ではあざやかに見える
+function ContrastChroma() {
+  return (
+    <Figure label="彩度対比。中央はどちらも同じくすんだ赤。あざやかな地の上ではより濁って、くすんだ地の上ではあざやかに見える。">
+      <svg viewBox="0 0 240 140" width="100%" role="img" aria-label="彩度対比の模式図">
+        <rect x="0" y="0" width="120" height="140" fill="#e8143c" />
+        <rect x="120" y="0" width="120" height="140" fill="#9c7b80" />
+        <rect x="36" y="40" width="48" height="60" fill="#c05a68" />
+        <rect x="156" y="40" width="48" height="60" fill="#c05a68" />
+        <text x="60" y="124" textAnchor="middle" fill="#fff" fontSize="11">あざやかな地</text>
+        <text x="180" y="124" textAnchor="middle" fill="#fff" fontSize="11">くすんだ地</text>
+      </svg>
+    </Figure>
+  );
+}
+
+// 補色対比：赤は緑と隣り合うとよりあざやかに見える（同じ赤を無彩色の地と比べる）
+function ContrastComplementary() {
+  return (
+    <Figure label="補色対比。左右の赤は同じ色。補色の緑と隣り合う右のほうが、灰色と隣り合う左よりあざやかに見える。">
+      <svg viewBox="0 0 240 140" width="100%" role="img" aria-label="補色対比の模式図">
+        <rect x="0" y="0" width="120" height="140" fill="#9a9a9a" />
+        <rect x="120" y="0" width="120" height="140" fill="#0f9d58" />
+        <rect x="36" y="34" width="48" height="66" fill="#e0203c" />
+        <rect x="156" y="34" width="48" height="66" fill="#e0203c" />
+        <text x="60" y="124" textAnchor="middle" fill="#fff" fontSize="11">灰色のとなり</text>
+        <text x="180" y="124" textAnchor="middle" fill="#fff" fontSize="11">補色（緑）のとなり</text>
+      </svg>
+    </Figure>
+  );
+}
+
+// 縁辺対比：明度の階段を並べると、各段の境目で暗く/明るく帯が見える（マッハバンド）
+function ContrastEdge() {
+  const steps = ['#1f1f1f', '#3d3d3d', '#5c5c5c', '#7a7a7a', '#999999', '#b8b8b8', '#d6d6d6'];
+  return (
+    <Figure label="縁辺対比。各段は内部が均一な灰色だが、境目のきわだけが、暗い側はより暗く、明るい側はより明るく見える。">
+      <svg viewBox="0 0 252 140" width="100%" role="img" aria-label="縁辺対比の模式図">
+        {steps.map((c, i) => <rect key={c} x={i * 36} y="16" width="36" height="86" fill={c} />)}
+        <text x="126" y="124" textAnchor="middle" fill="#555" fontSize="11">境目のきわに注目（段の内部は均一）</text>
+      </svg>
+    </Figure>
+  );
+}
+
 function ContrastValue() {
   return (
     <Figure label="明度対比。中央の灰色は同じ色だが、明るい地の上では暗く、暗い地の上では明るく見える。">
@@ -120,6 +185,10 @@ export default function ConceptDiagram({ dkey }: { dkey: string }) {
     case 'mixing-additive': return <MixingAdditive />;
     case 'mixing-subtractive': return <MixingSubtractive />;
     case 'contrast-value': return <ContrastValue />;
+    case 'contrast-hue': return <ContrastHue />;
+    case 'contrast-chroma': return <ContrastChroma />;
+    case 'contrast-complementary': return <ContrastComplementary />;
+    case 'contrast-edge': return <ContrastEdge />;
     case 'assimilation': return <Assimilation />;
     case 'gradation-hue': return <GradationHue />;
     default: return null;
