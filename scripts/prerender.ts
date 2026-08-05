@@ -174,12 +174,23 @@ for (const mod of modules) {
   <nav style="margin-top:28px;border-top:1px solid #e4ded4;padding-top:16px"><a href="${BASE}/" style="color:#8c2f39;text-decoration:none">← ホームへ戻る</a></nav>
   ${disclaimer}
 </article>`;
-  writePage(mod.id, mod.title, mod.description, body, {
-    '@context': 'https://schema.org', '@type': 'LearningResource',
-    name: mod.title, description: mod.description, url: `${BASE_URL}/${mod.id}/`,
-    inLanguage: 'ja', learningResourceType: '学習モジュール',
-    provider: { '@type': 'Organization', name: 'study-apps.com', url: 'https://study-apps.com' },
-  });
+  // O-2-10（2026-08-05）：下層ページにBreadcrumbListが欠落していた（LearningResourceのみ）。
+  writePage(mod.id, mod.title, mod.description, body, [
+    {
+      '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'ホーム', item: `${BASE_URL}/` },
+        { '@type': 'ListItem', position: 2, name: chapterNames[mod.chapter] ?? `第${mod.chapter}章`, item: `${BASE_URL}/` },
+        { '@type': 'ListItem', position: 3, name: mod.title, item: `${BASE_URL}/${mod.id}/` },
+      ],
+    },
+    {
+      '@context': 'https://schema.org', '@type': 'LearningResource',
+      name: mod.title, description: mod.description, url: `${BASE_URL}/${mod.id}/`,
+      inLanguage: 'ja', learningResourceType: '学習モジュール',
+      provider: { '@type': 'Organization', name: 'study-apps.com', url: 'https://study-apps.com' },
+    },
+  ]);
   count++;
 }
 
