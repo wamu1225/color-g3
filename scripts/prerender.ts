@@ -3,10 +3,31 @@
 // 実行: npx tsx scripts/prerender.ts（npm run predeploy 内）
 import * as fs from 'fs';
 import * as path from 'path';
+import React from 'react';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { modules } from '../src/data/modules';
 import { glossary } from '../src/data/glossary';
 import { chapterNames } from '../src/data/chapters';
 import { EXAM_CONFIG } from '../src/data/examConfig';
+import HueCircle from '../src/components/HueCircle';
+import ToneMap from '../src/components/ToneMap';
+import Swatch from '../src/components/Swatch';
+import ConceptDiagram from '../src/components/ConceptDiagram';
+
+// 図（[[huecircle]] / [[tonemap]] / [[swatches:KEY]] / [[diagram:KEY]]）を静的HTMLにも出す
+// （O-2-19・2026-08-15）。React コンポーネントを Node 側で react-dom/server により
+// そのまま SSR する＝手で SVG 文字列を書き写さない。App.tsx が描画する見た目と
+// 構造的にずれない（コンポーネントを直すだけで静的HTML側も追従する）。
+// 実行には --tsconfig tsconfig.app.json（automatic JSX runtime）が必須。
+function renderFigureTag(tag: string): string | null {
+  if (tag === '[[huecircle]]') return renderToStaticMarkup(React.createElement(HueCircle));
+  if (tag === '[[tonemap]]') return renderToStaticMarkup(React.createElement(ToneMap));
+  const sw = tag.match(/^\[\[swatches:([a-z0-9-]+)\]\]$/);
+  if (sw) return renderToStaticMarkup(React.createElement(Swatch, { setKey: sw[1] }));
+  const dg = tag.match(/^\[\[diagram:([a-z0-9-]+)\]\]$/);
+  if (dg) return renderToStaticMarkup(React.createElement(ConceptDiagram, { dkey: dg[1] }));
+  return null;
+}
 
 const DIST_DIR = path.resolve(process.cwd(), 'dist');
 const INDEX_HTML_PATH = path.join(DIST_DIR, 'index.html');
@@ -35,7 +56,12 @@ function mdToHtml(content: string): string {
   let i = 0;
   while (i < lines.length) {
     const t = lines[i].trim();
-    if (t === '' || /^\[\[.*?\]\]$/.test(t)) { i++; continue; }
+    if (t === '') { i++; continue; }
+    if (/^\[\[.*?\]\]$/.test(t)) {
+      const fig = renderFigureTag(t);
+      if (fig) out.push(fig);
+      i++; continue;
+    }
     if (/^---+$/.test(t)) { out.push('<hr>'); i++; continue; }
     if (t.startsWith('#### ')) { out.push(`<h4>${inlineHtml(t.slice(5))}</h4>`); i++; continue; }
     if (t.startsWith('### ')) { out.push(`<h3>${inlineHtml(t.slice(4))}</h3>`); i++; continue; }
