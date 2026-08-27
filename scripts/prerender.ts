@@ -301,7 +301,10 @@ writePage('privacy', 'プライバシーポリシー', '色彩検定3級 学習�
   { '@context': 'https://schema.org', '@type': 'WebPage', name: 'プライバシーポリシー', url: `${BASE_URL}/privacy/`, inLanguage: 'ja' });
 
 // ── sitemap.xml ─────────────────────────────────
-const today = '2026-06-11';
+// ⚠️ ビルド時の日付を使う（2026-08-28 修正）。以前はここが公開日の固定文字列で、
+// サイトを毎日更新しても sitemap の lastmod が 2026-06-11 のまま3か月動かず、
+// Google に「更新されていないサイト」と申告し続けていた。_pipeline/incidents.md 2026-08-28
+const today = new Date().toISOString().split('T')[0];
 const urls = [
   { loc: `${BASE_URL}/`, priority: '1.0', changefreq: 'weekly' },
   ...modules.map((m) => ({ loc: `${BASE_URL}/${m.id}/`, priority: '0.8', changefreq: 'monthly' })),
