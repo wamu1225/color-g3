@@ -35,7 +35,7 @@ export default function ToneMap({ highlight }: Props) {
   const plotW = w - padL - padR;
   const plotH = h - padT - padB;
   const sh = 30; // swatch 高さ
-  const fs = 10.5; // ラベルの文字サイズ
+  const fs = 11.5; // ラベルの文字サイズ（390px実効11px以上・O-2-25対応）
 
   const X = (x: number) => padL + x * plotW;
   const Y = (y: number) => padT + (1 - y) * plotH;
