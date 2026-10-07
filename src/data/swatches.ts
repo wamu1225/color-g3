@@ -116,6 +116,85 @@ export const swatchSets: Record<string, SwatchSet> = {
     caption: '日本語に由来する和色名の例。',
   },
 
+  'hue-schemes': {
+    groups: [
+      { label: '同一色相配色（色相は同じ・トーンで変化）', chips: [
+        { color: '#c0392b', name: '赤' },
+        { color: '#e8a39c', name: '赤（明るいトーン）' },
+      ] },
+      { label: '隣接色相配色（すぐとなり）', chips: [
+        { color: '#c0392b', name: '赤' },
+        { color: '#d35400', name: '赤みのだいだい' },
+      ] },
+      { label: '類似色相配色（近い）', chips: [
+        { color: '#c0392b', name: '赤' },
+        { color: '#e8820c', name: 'だいだい' },
+      ] },
+      { label: '中差色相配色（やや離れる）', chips: [
+        { color: '#c0392b', name: '赤' },
+        { color: '#8bab2e', name: '黄緑' },
+      ] },
+      { label: '対照色相配色（かなり離れる）', chips: [
+        { color: '#c0392b', name: '赤' },
+        { color: '#3a8a4f', name: '緑' },
+      ] },
+      { label: '補色色相配色（正反対）', chips: [
+        { color: '#c0392b', name: '赤' },
+        { color: '#2a9d8f', name: '青緑' },
+      ] },
+    ],
+    caption: '赤を基準に、色相環での距離が離れるほど対比が強くなる例。色相差が小さい配色ほどまとまり、大きい配色ほど対比がはっきりする。',
+  },
+
+  'tone-schemes': {
+    groups: [
+      { label: 'トーンオントーン配色（色相そろえ・明度差）', chips: [
+        { color: '#0d3b66', name: '濃い青' },
+        { color: '#2b79b8', name: '青' },
+        { color: '#9fc5e8', name: '淡い青' },
+      ] },
+      { label: 'トーンイントーン配色（トーンそろえ・色相自由）', chips: [
+        { color: '#f4a6ad', name: '淡い赤' },
+        { color: '#f2e29b', name: '淡い黄' },
+        { color: '#a8d8d8', name: '淡い青緑' },
+      ] },
+    ],
+    caption: 'トーンオントーンは色相を同じに保ち明度で変化を、トーンイントーンはトーンをそろえ色相を変える。',
+  },
+
+  'multicolor-schemes': {
+    groups: [
+      { label: 'ドミナントカラー配色（色相を共通・トーンで変化）', chips: [
+        { color: '#0d3b66', name: '濃い青' },
+        { color: '#2b79b8', name: '青' },
+        { color: '#9fc5e8', name: '淡い青' },
+      ] },
+      { label: 'ドミナントトーン配色（トーンを共通・色相は自由）', chips: [
+        { color: '#f4a6ad', name: '淡い赤' },
+        { color: '#f2e29b', name: '淡い黄' },
+        { color: '#a8d8d8', name: '淡い青緑' },
+      ] },
+      { label: 'カマイユ配色（ほぼ同じ）', chips: [
+        { color: '#c0392b', name: '赤' },
+        { color: '#c24a3a', name: '赤（ごくわずかに違う）' },
+      ] },
+      { label: 'フォカマイユ配色（少しだけ差をつける）', chips: [
+        { color: '#c0392b', name: '赤' },
+        { color: '#b5573f', name: '赤みの茶（少し差がある）' },
+      ] },
+      { label: 'ビコロール配色（2色・明快な対比）', chips: [
+        { color: '#d32f2f', name: '赤' },
+        { color: '#1e50a2', name: '青' },
+      ] },
+      { label: 'トリコロール配色（3色・フランス国旗の例）', chips: [
+        { color: '#0055a4', name: '青' },
+        { color: '#ffffff', name: '白' },
+        { color: '#ef4135', name: '赤' },
+      ] },
+    ],
+    caption: 'ドミナント系は何か（色相かトーン）を共通させて支配し、カマイユ系は弱い対比、ビコロール系は明快な対比をつくる。',
+  },
+
   'idiomatic-foreign': {
     chips: [
       { color: '#00a86b', name: 'エメラルドグリーン' },
