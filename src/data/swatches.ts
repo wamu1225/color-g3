@@ -143,7 +143,7 @@ export const swatchSets: Record<string, SwatchSet> = {
         { color: '#2a9d8f', name: '青緑' },
       ] },
     ],
-    caption: '赤を基準に、色相環での距離が離れるほど対比が強くなる例。色相差が小さい配色ほどまとまり、大きい配色ほど対比がはっきりする。',
+    caption: '赤を基準に、色相環での距離が離れるほど対比が強くなる例です。色相差が小さい配色ほどまとまりやすく、大きい配色ほど対比がはっきりします。',
   },
 
   'tone-schemes': {
@@ -159,7 +159,7 @@ export const swatchSets: Record<string, SwatchSet> = {
         { color: '#a8d8d8', name: '淡い青緑' },
       ] },
     ],
-    caption: 'トーンオントーンは色相を同じに保ち明度で変化を、トーンイントーンはトーンをそろえ色相を変える。',
+    caption: 'トーンオントーンは色相を同じに保ち明度で変化をつけ、トーンイントーンはトーンをそろえ色相を変えます。',
   },
 
   'multicolor-schemes': {
@@ -192,7 +192,7 @@ export const swatchSets: Record<string, SwatchSet> = {
         { color: '#ef4135', name: '赤' },
       ] },
     ],
-    caption: 'ドミナント系は何か（色相かトーン）を共通させて支配し、カマイユ系は弱い対比、ビコロール系は明快な対比をつくる。',
+    caption: 'ドミナント系は何か（色相かトーン）を共通させて支配し、カマイユ系は弱い対比、ビコロール系は明快な対比をつくります。',
   },
 
   'idiomatic-foreign': {
