@@ -325,8 +325,8 @@ function Home({ chapters, progress, navigate }: {
           中学・高校レベルの知識から、図と確認問題でひとつずつ理解していきます。
         </p>
         <div className="hero-actions">
-          <button className="btn btn-primary" onClick={() => navigate({ view: 'module', id: modules[0].id })}>最初のモジュールから始める</button>
-          <button className="btn" onClick={() => navigate({ view: 'guide' })}>試験ガイドを見る</button>
+          <a className="btn btn-primary" href={hrefFor({ view: 'module', id: modules[0].id })} onClick={(e) => { e.preventDefault(); navigate({ view: 'module', id: modules[0].id }); }}>最初のモジュールから始める</a>
+          <a className="btn" href={hrefFor({ view: 'guide' })} onClick={(e) => { e.preventDefault(); navigate({ view: 'guide' }); }}>試験ガイドを見る</a>
         </div>
       </section>
 
@@ -396,8 +396,8 @@ function ModulePage({ id, navigate, onQuizComplete }: {
       </section>
 
       <nav className="module-nav">
-        {prev ? <button className="btn" onClick={() => navigate({ view: 'module', id: prev.id })}>← {prev.title}</button> : <span />}
-        {next ? <button className="btn btn-primary" onClick={() => navigate({ view: 'module', id: next.id })}>{next.title} →</button> : <button className="btn" onClick={() => navigate({ view: 'home' })}>ホームへ戻る</button>}
+        {prev ? <a className="btn" href={hrefFor({ view: 'module', id: prev.id })} onClick={(e) => { e.preventDefault(); navigate({ view: 'module', id: prev.id }); }}>← {prev.title}</a> : <span />}
+        {next ? <a className="btn btn-primary" href={hrefFor({ view: 'module', id: next.id })} onClick={(e) => { e.preventDefault(); navigate({ view: 'module', id: next.id }); }}>{next.title} →</a> : <a className="btn" href={hrefFor({ view: 'home' })} onClick={(e) => { e.preventDefault(); navigate({ view: 'home' }); }}>ホームへ戻る</a>}
       </nav>
     </article>
   );
@@ -439,7 +439,7 @@ function GlossaryPage({ navigate }: { navigate: (r: Route) => void }) {
           </dl>
         </section>
       ))}
-      <p className="back"><button className="btn" onClick={() => navigate({ view: 'home' })}>← ホームへ戻る</button></p>
+      <p className="back"><a className="btn" href={hrefFor({ view: 'home' })} onClick={(e) => { e.preventDefault(); navigate({ view: 'home' }); }}>← ホームへ戻る</a></p>
     </div>
   );
 }
@@ -481,7 +481,7 @@ function GuidePage({ navigate }: { navigate: (r: Route) => void }) {
       <p>本サイトは公式テキストの分野構成に沿って6章に分け、各モジュールに10問の確認問題を用意しています。特に配点を分けやすいのは、PCCSの色相環とトーンを「自分で描けるようにする」ことと、配色技法・対比/同化など混同しやすい用語の区別です。色相環とトーンマップは図を見ながら、本文の確認問題で定着させていきましょう。</p>
 
       <p className="notice">※本サイトは個人が運営する学習支援サイトであり、{EXAM_CONFIG.organizer}の公式サイトではありません。最新かつ正確な試験情報は公式サイトでご確認ください。</p>
-      <p className="back"><button className="btn" onClick={() => navigate({ view: 'home' })}>← ホームへ戻る</button></p>
+      <p className="back"><a className="btn" href={hrefFor({ view: 'home' })} onClick={(e) => { e.preventDefault(); navigate({ view: 'home' }); }}>← ホームへ戻る</a></p>
     </div>
   );
 }
