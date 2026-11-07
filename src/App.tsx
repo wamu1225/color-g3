@@ -553,6 +553,7 @@ function Footer({ navigate }: { navigate: (r: Route) => void }) {
           <a href="https://study-apps.com/editorial-policy/">編集方針</a>
           <a href="https://study-apps.com/" target="_blank" rel="noopener noreferrer">study-apps.com</a>
         </nav>
+        <p className="footer-note">同じシリーズ：<a href="https://study-apps.com/color-uc/">色彩検定 UC級</a></p>
         <p className="footer-note">個人運営の学習支援サイトです。色彩検定協会の公式サイトではありません。</p>
       </div>
     </footer>
