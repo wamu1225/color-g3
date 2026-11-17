@@ -225,7 +225,7 @@ for (const mod of modules) {
 const glossaryItemsHtml = Object.values(glossary).map((t) =>
   `<div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #eee"><strong style="font-size:1rem;color:#6f242d">${esc(t.term)}</strong><p style="margin:6px 0 0;color:#444">${esc(t.explanation)}</p></div>`
 ).join('\n');
-writePage('glossary', '用語集', '色彩検定3級の頻出用語をやさしいことばで解説。色相・明度・彩度、PCCS、トーン、対比と同化、配色技法、慣用色名など試験に出る色彩用語を網羅。',
+writePage('glossary', '用語集', '色彩検定3級の範囲の用語をやさしいことばで解説。色相・明度・彩度、PCCS、トーン、対比と同化、配色技法、慣用色名など試験に出る色彩用語を網羅。',
   `${banner}${articleOpen}
   <nav style="margin-bottom:14px"><a href="${BASE}/" style="color:#8c2f39;text-decoration:none">← ホームへ戻る</a></nav>
   <h1 style="font-size:1.6rem;font-weight:700;border-bottom:2px solid #8c2f39;padding-bottom:8px;margin-bottom:18px">用語集</h1>

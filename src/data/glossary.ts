@@ -8,7 +8,7 @@ export interface Term {
   id: string;
   term: string;        // 表示名（読み・英語を併記）
   explanation: string; // 初学者向けのやさしい定義（自分の言葉）
-  level: '基礎' | '頻出' | '応用';
+  level: '基礎' | '重要' | '応用';
   relatedTerms?: string[];
 }
 
@@ -62,21 +62,21 @@ export const glossary: Record<string, Term> = {
     id: 'pure-color',
     term: '純色（じゅんしょく）',
     explanation: '各色相のなかで最も彩度が高い、混じりけのない色。純色に白を混ぜたものを明清色、黒を混ぜたものを暗清色、灰色を混ぜて濁らせたものを濁色（中間色）と呼ぶ。',
-    level: '頻出',
+    level: '重要',
     relatedTerms: ['chroma', 'clear-color', 'dull-color'],
   },
   'clear-color': {
     id: 'clear-color',
     term: '清色（せいしょく）',
     explanation: '純色に白だけ、または黒だけを混ぜた、濁りのない澄んだ色。白を混ぜた明るい清色が明清色、黒を混ぜた暗い清色が暗清色。灰色を混ぜた濁色と対になる考え方。',
-    level: '頻出',
+    level: '重要',
     relatedTerms: ['pure-color', 'dull-color'],
   },
   'dull-color': {
     id: 'dull-color',
     term: '濁色（だくしょく／中間色）',
     explanation: '純色に灰色を混ぜて、彩度を落とした濁りのある色。中間色とも呼ぶ。清色（白か黒だけを混ぜた澄んだ色）と区別して覚える。',
-    level: '頻出',
+    level: '重要',
     relatedTerms: ['pure-color', 'clear-color'],
   },
 
@@ -92,7 +92,7 @@ export const glossary: Record<string, Term> = {
     id: 'hue-circle',
     term: '色相環（しきそうかん）',
     explanation: '色相を順番に環状に並べたもの。PCCSでは24の色相に分け、各色相に番号と記号（例：2:R＝赤、8:Y＝黄）を付ける。環の向かい合う位置にある色どうしが補色で、近い位置どうしは似た色（類似色相）になる。試験では色相環を自分で描けるようにしておくと配色問題に強くなる。',
-    level: '頻出',
+    level: '重要',
     relatedTerms: ['pccs', 'hue', 'complementary', 'tone-map'],
   },
   'psychological-primary': {
@@ -113,7 +113,7 @@ export const glossary: Record<string, Term> = {
     id: 'tone-map',
     term: 'トーンマップ',
     explanation: 'PCCSの12トーンを、横軸に彩度・縦軸に明度をとって配置した図。どのトーンが明るい/暗い、あざやか/くすんでいるかを一目で確認でき、トーンを手がかりにした配色を考えるときの地図になる。色相環とセットで描けるようにしておくとよい。',
-    level: '頻出',
+    level: '重要',
     relatedTerms: ['tone', 'hue-circle'],
   },
   'munsell': {
@@ -129,14 +129,14 @@ export const glossary: Record<string, Term> = {
     id: 'additive-mixing',
     term: '加法混色（かほうこんしょく）',
     explanation: '光を重ねるほど明るくなる混色。赤（R）・緑（G）・青（B）の光の三原色を重ねると白に近づく。テレビやスマホの画面、舞台照明などがこのしくみで色を作っている。',
-    level: '頻出',
+    level: '重要',
     relatedTerms: ['subtractive-mixing'],
   },
   'subtractive-mixing': {
     id: 'subtractive-mixing',
     term: '減法混色（げんぽうこんしょく）',
     explanation: '絵の具やインクのように、混ぜるほど暗くなる混色。シアン（C）・マゼンタ（M）・イエロー（Y）の色料の三原色を重ねると黒に近づく。カラー印刷はこのしくみを使っている。加法混色と対にして覚える。',
-    level: '頻出',
+    level: '重要',
     relatedTerms: ['additive-mixing'],
   },
 
@@ -145,21 +145,21 @@ export const glossary: Record<string, Term> = {
     id: 'complementary',
     term: '補色（ほしょく）',
     explanation: '色相環で正反対に位置する色どうしの関係。となり合わせに置くとお互いをあざやかに見せ合う（補色対比）。赤と青緑のような組み合わせが代表例で、強い対比をつくりたいときに使う。',
-    level: '頻出',
+    level: '重要',
     relatedTerms: ['hue-circle', 'contrast'],
   },
   'contrast': {
     id: 'contrast',
     term: '対比（たいひ）',
     explanation: '近くにある色どうしが影響し合い、違いが強調されて見える現象。色みの差が強まる色相対比、明るさの差が強まる明度対比、あざやかさの差が強まる彩度対比、補色どうしが鮮明になる補色対比、境目がちらつく縁辺対比などがある。',
-    level: '頻出',
+    level: '重要',
     relatedTerms: ['assimilation', 'complementary', 'area-effect'],
   },
   'assimilation': {
     id: 'assimilation',
     term: '同化（どうか）',
     explanation: '対比とは逆に、囲まれた色や挟まれた色が、まわりの色に近づいて見える現象。細かい模様やストライプなど、色の面積が小さく入り組んでいるときに起こりやすい。「差が強調される＝対比」「まわりに近づく＝同化」と対で覚える。',
-    level: '頻出',
+    level: '重要',
     relatedTerms: ['contrast'],
   },
   'area-effect': {
@@ -175,7 +175,7 @@ export const glossary: Record<string, Term> = {
     id: 'warm-cool',
     term: '暖色・寒色・中性色',
     explanation: '赤やオレンジのように暖かさを感じる色が暖色、青や青緑のように冷たさを感じる色が寒色、緑や紫のようにどちらともいえない色が中性色。暖色は進出・膨張、寒色は後退・収縮の効果と結びつけて覚えるとよい。',
-    level: '頻出',
+    level: '重要',
     relatedTerms: ['advancing-receding', 'expansion-contraction'],
   },
   'advancing-receding': {
@@ -205,21 +205,21 @@ export const glossary: Record<string, Term> = {
     id: 'separation',
     term: 'セパレーション配色',
     explanation: '色と色の境目に別の色（多くは白・黒・灰色などの無彩色）を細く挟む技法。配色が強すぎてぶつかるときは和らげ、ぼやけて締まらないときはメリハリをつける、調整役の配色。',
-    level: '頻出',
+    level: '重要',
     relatedTerms: ['accent', 'achromatic'],
   },
   'accent': {
     id: 'accent',
     term: 'アクセントカラー配色',
     explanation: '全体をまとめた配色のなかに、小さな面積で対照的な色を効かせて引き締める技法。地味になりがちな配色に焦点をつくり、目を引くポイントを生む。',
-    level: '頻出',
+    level: '重要',
     relatedTerms: ['separation', 'dominant-color'],
   },
   'gradation': {
     id: 'gradation',
     term: 'グラデーション配色',
     explanation: '色相・明度・彩度のいずれかを少しずつ段階的に変化させて並べる配色。連続的に移り変わるため、リズムと秩序のある自然な流れが生まれる。',
-    level: '頻出',
+    level: '重要',
     relatedTerms: ['tone-on-tone'],
   },
   'dominant-color': {
@@ -270,14 +270,14 @@ export const glossary: Record<string, Term> = {
     id: 'basic-color-name',
     term: '基本色名（きほんしきめい）',
     explanation: '赤・黄・緑・青・白・黒のように、色を大きく分類するための基本となる色名。系統色名や慣用色名の土台になる。',
-    level: '頻出',
+    level: '重要',
     relatedTerms: ['systematic-color-name', 'idiomatic-color-name'],
   },
   'systematic-color-name': {
     id: 'systematic-color-name',
     term: '系統色名（けいとうしきめい）',
     explanation: '基本色名に「明るい」「うすい」「こい」などの修飾語を付けて、色をある程度正確に言い表す色名（例：明るい赤、こい緑みの青）。だれが見てもおおよその色がわかるよう、ことばで体系立てられている。慣用色名と対にして覚える。',
-    level: '頻出',
+    level: '重要',
     relatedTerms: ['basic-color-name', 'idiomatic-color-name'],
   },
   'proper-color-name': {
@@ -291,7 +291,7 @@ export const glossary: Record<string, Term> = {
     id: 'idiomatic-color-name',
     term: '慣用色名（かんようしきめい）',
     explanation: '桜色・珊瑚色・紅梅色のように、昔から慣用的に使われ、多くの人が色を思い浮かべられる色名。風情を伝えるのは得意だが、正確に色を指定するには向かない。日本産業規格（JIS）が定めた慣用色名（JIS慣用色名）があり、3級では公式テキストに載っている和色名・外来色名が出題範囲になる。',
-    level: '頻出',
+    level: '重要',
     relatedTerms: ['systematic-color-name', 'proper-color-name'],
   },
 };

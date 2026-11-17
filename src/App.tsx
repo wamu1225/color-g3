@@ -406,7 +406,7 @@ function ModulePage({ id, navigate, onQuizComplete }: {
 // ── Glossary ───────────────────────────────────
 function GlossaryPage({ navigate }: { navigate: (r: Route) => void }) {
   const groups = useMemo(() => {
-    const order: Term['level'][] = ['基礎', '頻出', '応用'];
+    const order: Term['level'][] = ['基礎', '重要', '応用'];
     const byLevel: Record<string, Term[]> = {};
     for (const k of Object.keys(glossary)) { const t = glossary[k]; (byLevel[t.level] ||= []).push(t); }
     return order.filter((l) => byLevel[l]).map((l) => ({ level: l, items: byLevel[l] }));
